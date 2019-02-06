@@ -41,6 +41,8 @@ public class SnakeApp {
     int nr_selected = 0;
     Thread[] thread = new Thread[MAX_THREADS];
     boolean isPause=false;
+    boolean gameOn=false;
+    int firstDead;
 
     public SnakeApp() {
         Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
@@ -85,6 +87,7 @@ public class SnakeApp {
                     
                     isPause=true;
                     System.out.print("paused: "+isPause);
+                    System.out.println(firstDead);
             }  
         });
     }
@@ -114,6 +117,7 @@ public class SnakeApp {
                 for (int i = 0; i != MAX_THREADS; i++) {
                     //no se cual hilo detener , y falta reanudarlos
                     snakes[i].play();
+                    
 //                    thread[i].
 //                    }
                     }                   
@@ -121,6 +125,8 @@ public class SnakeApp {
                 for (int i = 0; i != MAX_THREADS; i++) {
                     if (snakes[i].isSnakeEnd() == true) {
                         x++;
+                        final int worst=i;
+                        firstDead=worst+1;
                     }
                 }
                 if (x == MAX_THREADS) {
@@ -128,6 +134,7 @@ public class SnakeApp {
                 }
               
             }else{
+                
                 for (int i = 0; i != MAX_THREADS; i++) {
                     //no se cual hilo detener , y falta reanudarlos
                     snakes[i].pause();
