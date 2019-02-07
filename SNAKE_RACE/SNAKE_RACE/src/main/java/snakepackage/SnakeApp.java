@@ -10,6 +10,7 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
@@ -42,7 +43,7 @@ public class SnakeApp {
     Thread[] thread = new Thread[MAX_THREADS];
     boolean isPause=false;
     boolean gameOn=false;
-    int firstDead;
+    ArrayList<Integer> firstDead=new ArrayList<Integer>();
 
     public SnakeApp() {
         Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
@@ -62,7 +63,7 @@ public class SnakeApp {
         JPanel actionsBPabel=new JPanel();
         JButton resume=new JButton("Resume ");
         JButton pause=new JButton("Pause ");
-        JButton play=new JButton("Play ");
+        final JButton play=new JButton("Play ");
         actionsBPabel.setLayout(new FlowLayout());
         actionsBPabel.add(play);
         actionsBPabel.add(pause);
@@ -79,6 +80,8 @@ public class SnakeApp {
         play.addActionListener(new ActionListener(){  
                 public void actionPerformed(ActionEvent e){  
                     System.out.print("Play");
+                    gameOn=true;
+                    play.setEnabled(false);
             }  
        });
         
@@ -87,7 +90,7 @@ public class SnakeApp {
                     
                     isPause=true;
                     System.out.print("paused: "+isPause);
-                    System.out.println(firstDead);
+                    System.out.println("La primera serpiente en morir fue la numero: "+firstDead.get(0));
             }  
         });
     }
@@ -109,37 +112,44 @@ public class SnakeApp {
 
         frame.setVisible(true);
 
-            
+        
         while (true) {
-            if(!isPause){
-                //                    synchronized(it){
-//                        it.notifyAll();
-                for (int i = 0; i != MAX_THREADS; i++) {
-                    //no se cual hilo detener , y falta reanudarlos
-                    snakes[i].play();
-                    
-//                    thread[i].
-//                    }
-                    }                   
-                int x = 0;
-                for (int i = 0; i != MAX_THREADS; i++) {
-                    if (snakes[i].isSnakeEnd() == true) {
-                        x++;
-                        final int worst=i;
-                        firstDead=worst+1;
+            if(gameOn){
+                if(!isPause){
+                    //                    synchronized(it){
+    //                        it.notifyAll();
+                    for (int i = 0; i != MAX_THREADS; i++) {
+                        //no se cual hilo detener , y falta reanudarlos
+                        snakes[i].play();
+
+    //                    thread[i].
+    //                    }
+                        }                   
+                    int x = 0;
+                    for (int i = 0; i != MAX_THREADS; i++) {
+                        if (snakes[i].isSnakeEnd() == true) {
+                            x++;
+                            firstDead.add(i+1);
+                        }
                     }
+                    if (x == MAX_THREADS) {
+                        break;
+                    }
+
+                }else{
+
+                    for (int i = 0; i != MAX_THREADS; i++) {
+                        //no se cual hilo detener , y falta reanudarlos
+                        snakes[i].pause();
+    //                    thread[i].
+                    }
+                    
                 }
-                if (x == MAX_THREADS) {
-                    break;
-                }
-              
             }else{
-                
+                System.out.println("El juego no a iniciado");    
                 for (int i = 0; i != MAX_THREADS; i++) {
-                    //no se cual hilo detener , y falta reanudarlos
-                    snakes[i].pause();
-//                    thread[i].
-                }   
+                        snakes[i].pause();
+                    } 
             }
         }
 
