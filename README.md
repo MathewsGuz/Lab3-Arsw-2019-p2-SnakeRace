@@ -11,7 +11,7 @@ Snake Race
 
 Punto 1
 
-![](SNAKE_RACE/SNAKE_RACE/img/img.jpg)
+![](SNAKE_RACE/SNAKE_RACE/img/img.jpeg)
 
 La clase Snake app se encarga de manejar las serpientes por medios de cada hilo como se ve en la imagen y en la clase Snake el metodo run se maneja el movimiento aleatorio de cada serpiente
 
